@@ -11,8 +11,6 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RESOLUTION = 50
 LINE_THICKNESS = 3
-POINT_RADIUS = 5  # Radius of the control points
-POINT_COLOR = (255, 0, 0)
 BOTTOM_COLOR = (0, 50, 125)
 
 # Set up the display
@@ -30,34 +28,15 @@ control_points = [(100, 100),
                   (300, 200),
                   (500, 100)]
 
-# Variable to keep track of the point being dragged
-dragging_point = None
-
 # Main loop
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == MOUSEBUTTONDOWN:
-            # Check if the mouse position is within the radius of any point
-            for i, point in enumerate(control_points):
-                if abs(event.pos[0] - point[0]) < POINT_RADIUS and abs(event.pos[1] - point[1]) < POINT_RADIUS:
-                    dragging_point = i  # Start dragging this point
-                    break
-        elif event.type == MOUSEMOTION and dragging_point is not None:
-            # Update the position of the point being dragged
-            control_points[dragging_point] = event.pos
-        elif event.type == MOUSEBUTTONUP:
-            # Stop dragging the point
-            dragging_point = None
 
     # Clear the screen
     screen.fill(WHITE)
-
-    # Draw the control points
-    for point in control_points:
-        pygame.draw.circle(screen, POINT_COLOR, (int(point[0]), int(point[1])), POINT_RADIUS)
 
     # Calculate all points of the Bezier curve
     curve_points = [bezier_curve(t / RESOLUTION, control_points) for t in range(0, RESOLUTION + 1)]
